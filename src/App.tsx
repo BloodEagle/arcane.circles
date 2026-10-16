@@ -1,7 +1,7 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useMemo } from 'react';
 import type { AnyLayer, GlyphPlacement } from '@/esoteric/types';
 import { ARCHETYPES, clonePreset } from '@/esoteric/archetypes';
-import { downloadSvg, downloadPng } from '@/esoteric/svgUtils';
+import { downloadSvg, downloadPng, type RenderOptions } from '@/esoteric/svgUtils';
 import { THEMES, getTheme, applyTheme, DEFAULT_THEME_ID } from '@/esoteric/theme';
 import Sidebar from '@/components/Sidebar';
 import SigilCanvas from '@/components/SigilCanvas';
@@ -21,12 +21,22 @@ export default function App() {
   const [iosHintOpen, setIosHintOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [autoContrast, setAutoContrast] = useState(true);
   const { canInstall, isInstalled, isIOS, promptInstall } = usePwaInstall();
   const { saveAutosave, loadAutosave } = useDesignStorage();
 
   useEffect(() => {
     applyTheme(getTheme(themeId));
   }, [themeId]);
+
+  const renderOptions = useMemo<RenderOptions>(() => {
+    const theme = getTheme(themeId);
+    return {
+      bgColor: theme.colors.bg,
+      glyphColor: theme.colors.text,
+      autoContrast,
+    };
+  }, [themeId, autoContrast]);
 
   // Mobile detection
   useEffect(() => {
@@ -52,8 +62,8 @@ export default function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handleExportSvg = useCallback(() => downloadSvg(layers, placements), [layers, placements]);
-  const handleExportPng = useCallback(() => downloadPng(layers, placements), [layers, placements]);
+  const handleExportSvg = useCallback(() => downloadSvg(layers, placements, renderOptions), [layers, placements, renderOptions]);
+  const handleExportPng = useCallback(() => downloadPng(layers, placements, renderOptions), [layers, placements, renderOptions]);
 
   const applyPresetById = useCallback((id: string) => {
     const preset = ARCHETYPES.find(p => p.id === id);
@@ -65,7 +75,7 @@ export default function App() {
 
   return (
     <div
-      className="h-screen flex flex-col overflow-hidden"
+      className="h-screen h-dvh flex flex-col overflow-hidden"
       style={{ background: 'var(--c-bg)', color: 'var(--c-text)' }}
     >
       <header
@@ -157,7 +167,7 @@ export default function App() {
               <>
                 <div className="fixed inset-0 z-10" onClick={() => setThemeMenuOpen(false)} />
                 <div
-                  className="absolute right-0 top-full mt-1 z-20 rounded-lg py-1 min-w-[160px] shadow-xl"
+                  className="absolute right-0 top-full mt-1 z-20 rounded-lg py-1 min-w-[180px] shadow-xl"
                   style={{ background: 'var(--c-panel)', border: '1px solid var(--c-border-hover)' }}
                 >
                   {THEMES.map(t => (
@@ -177,6 +187,23 @@ export default function App() {
                       {t.name}
                     </button>
                   ))}
+                  <div style={{ borderTop: '1px solid var(--c-border)', marginTop: '4px' }} />
+                  <button
+                    onClick={() => setAutoContrast(v => !v)}
+                    className="w-full flex items-center gap-2 px-3 py-2 text-xs text-left transition-colors hover:bg-[var(--c-panel-hover)]"
+                    style={{ color: 'var(--c-text-muted)' }}
+                  >
+                    <span
+                      className="w-3 h-3 rounded-sm shrink-0 flex items-center justify-center"
+                      style={{
+                        border: '1px solid var(--c-accent-border)',
+                        background: autoContrast ? 'var(--c-accent)' : 'transparent',
+                      }}
+                    >
+                      {autoContrast && <span className="text-[8px]" style={{ color: 'var(--c-bg)' }}>✓</span>}
+                    </span>
+                    Auto-contrast
+                  </button>
                 </div>
               </>
             )}
@@ -203,7 +230,7 @@ export default function App() {
                   background: 'radial-gradient(ellipse at center, rgba(0,0,0,0) 0%, var(--c-bg) 70%)',
                 }}
               />
-              <SigilCanvas layers={layers} placements={placements} />
+              <SigilCanvas layers={layers} placements={placements} renderOptions={renderOptions} />
             </main>
             {sidebarOpen && (
               <>
@@ -212,16 +239,17 @@ export default function App() {
                   onClick={() => setSidebarOpen(false)}
                 />
                 <div
-                  className="fixed bottom-0 left-0 right-0 z-50 rounded-t-2xl transition-transform"
+                  className="fixed bottom-0 left-0 right-0 z-50 rounded-t-2xl flex flex-col"
                   style={{
-                    maxHeight: '85vh',
+                    maxHeight: '85dvh',
                     background: 'var(--c-panel)',
                     borderTop: '1px solid var(--c-border)',
                     paddingBottom: 'env(safe-area-inset-bottom)',
+                    overscrollBehavior: 'contain',
                   }}
                 >
-                  <div className="w-12 h-1 bg-gray-600 rounded-full mx-auto mt-3 mb-2" />
-                  <div className="overflow-hidden flex flex-col" style={{ maxHeight: 'calc(85vh - 24px)' }}>
+                  <div className="w-12 h-1 bg-gray-600 rounded-full mx-auto mt-3 mb-2 shrink-0" />
+                  <div className="flex-1 min-h-0 flex flex-col overflow-hidden">
                     <Sidebar
                       layers={layers}
                       placements={placements}
@@ -263,7 +291,7 @@ export default function App() {
                   background: 'radial-gradient(ellipse at center, rgba(0,0,0,0) 0%, var(--c-bg) 70%)',
                 }}
               />
-              <SigilCanvas layers={layers} placements={placements} />
+              <SigilCanvas layers={layers} placements={placements} renderOptions={renderOptions} />
             </main>
           </>
         )}

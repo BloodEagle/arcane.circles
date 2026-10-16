@@ -2,6 +2,7 @@ import type { AnyLayer, PolygonLayer, AxisLayer, RingLayer, TextRingLayer, Spine
 import { CENTER, CANVAS_SIZE } from './types';
 import { GLYPHS } from './glyphs';
 import { genId } from './archetypes';
+import { ensureContrast } from './colorUtils';
 
 const PHI = 1.61803398875;
 
@@ -174,9 +175,16 @@ export function computePlacementCoords(
   }
 }
 
+export interface RenderOptions {
+  bgColor?: string;
+  glyphColor?: string;
+  autoContrast?: boolean;
+}
+
 export function renderGlyphPlacement(
   placement: GlyphPlacement,
-  layers: AnyLayer[]
+  layers: AnyLayer[],
+  glyphColor = '#E2E8F0'
 ): string {
   const glyph = GLYPHS[placement.glyphId];
   if (!glyph) return '';
@@ -185,19 +193,22 @@ export function renderGlyphPlacement(
   for (const c of coords) {
     const half = placement.size / 2;
     const scale = placement.size / 50;
-    out += `\n  <g transform="translate(${(c.x - half).toFixed(2)},${(c.y - half).toFixed(2)}) scale(${scale.toFixed(3)})" color="#E2E8F0">${glyph.render(50)}</g>`;
+    out += `\n  <g transform="translate(${(c.x - half).toFixed(2)},${(c.y - half).toFixed(2)}) scale(${scale.toFixed(3)})" color="${glyphColor}">${glyph.render(50)}</g>`;
   }
   return out.trim();
 }
 
-export function buildSvgInner(layers: AnyLayer[], placements: GlyphPlacement[]): string {
+export function buildSvgInner(layers: AnyLayer[], placements: GlyphPlacement[], opts: RenderOptions = {}): string {
   const filterDefs = new Map<string, string>();
+  const effectiveLayers = opts.autoContrast && opts.bgColor
+    ? layers.map(l => ({ ...l, color: ensureContrast(l.color, opts.bgColor!) }))
+    : layers;
   let body = '';
-  for (const layer of layers) {
+  for (const layer of effectiveLayers) {
     body += '\n  ' + renderLayer(layer, filterDefs);
   }
   for (const p of placements) {
-    body += '\n  ' + renderGlyphPlacement(p, layers);
+    body += '\n  ' + renderGlyphPlacement(p, effectiveLayers, opts.glyphColor);
   }
   let defs = '';
   for (const [, def] of filterDefs) {
@@ -206,8 +217,8 @@ export function buildSvgInner(layers: AnyLayer[], placements: GlyphPlacement[]):
   return defs + body;
 }
 
-export function buildExportSvg(layers: AnyLayer[], placements: GlyphPlacement[]): string {
-  const inner = buildSvgInner(layers, placements);
+export function buildExportSvg(layers: AnyLayer[], placements: GlyphPlacement[], opts: RenderOptions = {}): string {
+  const inner = buildSvgInner(layers, placements, opts);
   return `<?xml version="1.0" encoding="UTF-8"?>\n<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${CANVAS_SIZE} ${CANVAS_SIZE}" width="${CANVAS_SIZE}" height="${CANVAS_SIZE}">\n${inner}\n</svg>`;
 }
 
@@ -215,8 +226,8 @@ function escapeXml(s: string): string {
   return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&apos;');
 }
 
-export function downloadSvg(layers: AnyLayer[], placements: GlyphPlacement[]): void {
-  const svg = buildExportSvg(layers, placements);
+export function downloadSvg(layers: AnyLayer[], placements: GlyphPlacement[], opts: RenderOptions = {}): void {
+  const svg = buildExportSvg(layers, placements, opts);
   const blob = new Blob([svg], { type: 'image/svg+xml;charset=utf-8' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
@@ -228,8 +239,8 @@ export function downloadSvg(layers: AnyLayer[], placements: GlyphPlacement[]): v
   URL.revokeObjectURL(url);
 }
 
-export function downloadPng(layers: AnyLayer[], placements: GlyphPlacement[], scale = 2): void {
-  const svg = buildExportSvg(layers, placements);
+export function downloadPng(layers: AnyLayer[], placements: GlyphPlacement[], opts: RenderOptions = {}, scale = 2): void {
+  const svg = buildExportSvg(layers, placements, opts);
   const blob = new Blob([svg], { type: 'image/svg+xml;charset=utf-8' });
   const url = URL.createObjectURL(blob);
   const img = new Image();

@@ -138,7 +138,7 @@ export default function Sidebar({ layers, placements, onLayersChange, onPlacemen
           </button>
         </div>
       )}
-      <div className="flex-1 overflow-y-auto custom-scroll p-4 space-y-5">
+      <div className="flex-1 min-h-0 overflow-y-auto custom-scroll p-4 space-y-5">
         <Section title="Narrative Archetype" icon={<Sparkles size={14} />} highlighted={true}>
           <div className="flex items-center gap-1">
             <select
