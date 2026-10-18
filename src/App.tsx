@@ -75,7 +75,7 @@ export default function App() {
 
   return (
     <div
-      className="h-screen h-dvh flex flex-col overflow-hidden"
+      className="app-shell flex flex-col overflow-hidden"
       style={{ background: 'var(--c-bg)', color: 'var(--c-text)' }}
     >
       <header
@@ -239,17 +239,15 @@ export default function App() {
                   onClick={() => setSidebarOpen(false)}
                 />
                 <div
-                  className="fixed bottom-0 left-0 right-0 z-50 rounded-t-2xl flex flex-col"
+                  className="mobile-sheet fixed bottom-0 left-0 right-0 z-50 rounded-t-2xl flex flex-col"
                   style={{
-                    maxHeight: '85dvh',
                     background: 'var(--c-panel)',
                     borderTop: '1px solid var(--c-border)',
                     paddingBottom: 'env(safe-area-inset-bottom)',
-                    overscrollBehavior: 'contain',
                   }}
                 >
                   <div className="w-12 h-1 bg-gray-600 rounded-full mx-auto mt-3 mb-2 shrink-0" />
-                  <div className="flex-1 min-h-0 flex flex-col overflow-hidden">
+                  <div className="flex-1 min-h-0 overflow-y-auto custom-scroll">
                     <Sidebar
                       layers={layers}
                       placements={placements}

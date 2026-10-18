@@ -23,6 +23,9 @@
 }
 
 @layer base {
+  html, body {
+    overscroll-behavior: none;
+  }
   html, body, #root {
     height: 100%;
     margin: 0;
@@ -105,6 +108,15 @@
 }
 
 @layer utilities {
+  .app-shell {
+    height: 100vh;
+    height: 100dvh;
+  }
+  .mobile-sheet {
+    max-height: 85vh;
+    max-height: 85dvh;
+    overscroll-behavior: contain;
+  }
   .custom-scroll {
     -webkit-overflow-scrolling: touch;
     overscroll-behavior: contain;
