@@ -5,7 +5,7 @@ import { createLayer } from '@/esoteric/svgUtils';
 import { PLACEMENT_TOOLTIPS, EXPORT_TOOLTIPS, LAYER_TYPE_LORE, GLYPH_LORE, LAYER_TYPE_ICONS, ARCHETYPE_ICONS } from '@/esoteric/knowledge';
 import LayerEditor from './LayerEditor';
 import Tooltip from './Tooltip';
-import { Plus, Trash2, Download, FileImage, Sparkles, Save, FolderOpen, Upload, X, LucideIcon } from 'lucide-react';
+import { Plus, Trash2, Download, FileImage, Sparkles, Save, FolderOpen, Upload, X, Circle, LucideIcon } from 'lucide-react';
 import { useDesignStorage, type SavedDesign } from '@/hooks/useDesignStorage';
 import { useState, useRef } from 'react';
 
@@ -17,6 +17,8 @@ interface Props {
   onExportSvg: () => void;
   onExportPng: () => void;
   onApplyPreset: (id: string) => void;
+  globalRotation: number;
+  onGlobalRotationChange: (deg: number) => void;
   onClose?: () => void;
   isMobile?: boolean;
 }
@@ -29,7 +31,7 @@ const ADD_LAYER_OPTIONS: { label: string; type: AnyLayer['type']; tooltipKey: st
   { label: 'Center Spine', type: 'spine', tooltipKey: 'spine', icon: LAYER_TYPE_ICONS.spine },
 ];
 
-export default function Sidebar({ layers, placements, onLayersChange, onPlacementsChange, onExportSvg, onExportPng, onApplyPreset, onClose, isMobile = false }: Props) {
+export default function Sidebar({ layers, placements, onLayersChange, onPlacementsChange, onExportSvg, onExportPng, onApplyPreset, globalRotation, onGlobalRotationChange, onClose, isMobile = false }: Props) {
   const glyphGroupsMap = glyphGroups();
   const {
     savedDesigns,
@@ -181,6 +183,17 @@ export default function Sidebar({ layers, placements, onLayersChange, onPlacemen
           </p>
         </Section>
 
+        <Section title="Canvas" icon={<Circle size={14} />}>
+          <FieldRow label="Rotation" tooltip="Rotates the entire sigil — every layer and glyph — around the canvas center. Baked into SVG/PNG exports." isMobile={isMobile}>
+            <input
+              type="range" min={0} max={360} step={1} value={globalRotation}
+              onChange={e => onGlobalRotationChange(parseFloat(e.target.value))}
+              className={`flex-1 cursor-pointer ${isMobile ? 'mobile-slider-thumb' : ''}`}
+            />
+            <span className={`font-mono w-10 text-right ${isMobile ? 'text-xs' : 'text-[10px]'}`} style={{ color: 'var(--c-text-muted)' }}>{Math.round(globalRotation)}°</span>
+          </FieldRow>
+        </Section>
+
         <Section title="Saved Designs" icon={<FolderOpen size={14} />}>
           <div className="flex gap-1.5 mb-2">
             <button onClick={() => setSaveDialogOpen(true)} className="btn-secondary flex-1"><Save size={14} /> Save</button>
@@ -277,6 +290,10 @@ export default function Sidebar({ layers, placements, onLayersChange, onPlacemen
                 <FieldRow label="Size" tooltip={PLACEMENT_TOOLTIPS.size} isMobile={isMobile}>
                   <input type="range" min={12} max={120} step={2} value={p.size} onChange={e => updatePlacement(i, { size: parseInt(e.target.value) })} className={`flex-1 cursor-pointer ${isMobile ? 'mobile-slider-thumb' : ''}`} />
                   <span className={`font-mono w-8 text-right ${isMobile ? 'text-xs' : 'text-[10px]'}`} style={{ color: 'var(--c-text-muted)' }}>{p.size}</span>
+                </FieldRow>
+                <FieldRow label="Rotate" tooltip={PLACEMENT_TOOLTIPS.rotation} isMobile={isMobile}>
+                  <input type="range" min={0} max={360} step={1} value={p.rotation ?? 0} onChange={e => updatePlacement(i, { rotation: parseFloat(e.target.value) })} className={`flex-1 cursor-pointer ${isMobile ? 'mobile-slider-thumb' : ''}`} />
+                  <span className={`font-mono w-8 text-right ${isMobile ? 'text-xs' : 'text-[10px]'}`} style={{ color: 'var(--c-text-muted)' }}>{Math.round(p.rotation ?? 0)}°</span>
                 </FieldRow>
               </div>
             ))}

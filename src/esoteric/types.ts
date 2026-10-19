@@ -8,12 +8,45 @@ export type GlyphId =
   | 'salt'
   | 'sun'
   | 'moon'
-  | 'earthAntimony';
+  | 'earthAntimony'
+  | 'aries'
+  | 'taurus'
+  | 'gemini'
+  | 'cancer'
+  | 'leo'
+  | 'virgo'
+  | 'libra'
+  | 'scorpio'
+  | 'sagittarius'
+  | 'capricorn'
+  | 'aquarius'
+  | 'pisces'
+  | 'venus'
+  | 'mars'
+  | 'jupiter'
+  | 'saturn'
+  | 'uranus'
+  | 'neptune'
+  | 'pluto'
+  | 'fehu'
+  | 'uruz'
+  | 'thurisaz'
+  | 'ansuz'
+  | 'raidho'
+  | 'kenaz'
+  | 'gebo'
+  | 'hagalaz'
+  | 'isa'
+  | 'algiz'
+  | 'sowilo'
+  | 'tiwaz';
+
+export type GlyphGroup = 'Elements' | 'Primes' | 'Astrological' | 'Zodiac' | 'Planets' | 'Runes';
 
 export interface Glyph {
   id: GlyphId;
   name: string;
-  group: 'Elements' | 'Primes' | 'Astrological';
+  group: GlyphGroup;
   render: (size?: number) => string;
 }
 
@@ -77,6 +110,7 @@ export interface GlyphPlacement {
   target: PlacementTarget;
   targetLayerId: string | null;
   size: number;
+  rotation?: number;
 }
 
 export interface ArchetypePreset {

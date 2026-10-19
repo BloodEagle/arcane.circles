@@ -7,9 +7,10 @@ interface Props {
   layers: AnyLayer[];
   placements: GlyphPlacement[];
   renderOptions?: RenderOptions;
+  animate?: boolean;
 }
 
-export default function SigilCanvas({ layers, placements, renderOptions }: Props) {
+export default function SigilCanvas({ layers, placements, renderOptions, animate = false }: Props) {
   const inner = useMemo(
     () => buildSvgInner(layers, placements, renderOptions),
     [layers, placements, renderOptions]
@@ -26,7 +27,7 @@ export default function SigilCanvas({ layers, placements, renderOptions }: Props
       />
       <svg
         viewBox={`0 0 ${CANVAS_SIZE} ${CANVAS_SIZE}`}
-        className="w-full h-full max-w-[min(100%,calc(100dvh-160px))] max-h-[min(100%,calc(100dvh-160px))] drop-shadow-[0_0_30px_rgba(0,0,0,0.5)]"
+        className={`w-full h-full max-w-[min(100%,calc(100dvh-160px))] max-h-[min(100%,calc(100dvh-160px))] drop-shadow-[0_0_30px_rgba(0,0,0,0.5)] ${animate ? 'sigil-animating' : ''}`}
         dangerouslySetInnerHTML={{ __html: inner }}
       />
     </div>

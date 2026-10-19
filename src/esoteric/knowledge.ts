@@ -106,6 +106,130 @@ export const GLYPH_LORE: Record<GlyphId, KnowledgeEntry> = {
     title: 'Earth / Antimony (Globus Cruciger)',
     body: 'A circle surmounted by a cross, styled as the Globus Cruciger. In alchemy, this glyph represents both the planet Earth and the metal Antimony. Antimony was used in purification processes -- it cleans gold of its impurities, paralleling the spiritual purification of the soul.',
   },
+  aries: {
+    title: 'Aries (Ram)',
+    body: 'First sign of the zodiac, ruled by Mars. Cardinal fire: initiative, courage, and raw ignition. In sigil work, Aries marks beginnings and the will to act.',
+  },
+  taurus: {
+    title: 'Taurus (Bull)',
+    body: 'Fixed earth sign ruled by Venus. Represents endurance, fertility, and material grounding. Used in workings for stability, prosperity, and patience.',
+  },
+  gemini: {
+    title: 'Gemini (Twins)',
+    body: 'Mutable air sign ruled by Mercury. Duality, communication, and exchange. In esoteric work it marks thresholds, translation, and the meeting of opposites.',
+  },
+  cancer: {
+    title: 'Cancer (Crab)',
+    body: 'Cardinal water sign ruled by the Moon. Protection, intuition, and the tide-like pull of memory. Favored in lunar rites and workings of home and sanctuary.',
+  },
+  leo: {
+    title: 'Leo (Lion)',
+    body: 'Fixed fire sign ruled by the Sun. Sovereignty, radiance, and creative flame. In circle work it amplifies presence, vitality, and solar authority.',
+  },
+  virgo: {
+    title: 'Virgo (Maiden)',
+    body: 'Mutable earth sign ruled by Mercury. Precision, purification, and harvest. Used in workings of refinement, healing, and careful discernment.',
+  },
+  libra: {
+    title: 'Libra (Scales)',
+    body: 'Cardinal air sign ruled by Venus. Balance, justice, and equilibrium. In sigils it weighs opposing forces and seals agreements between them.',
+  },
+  scorpio: {
+    title: 'Scorpio (Scorpion)',
+    body: 'Fixed water sign ruled by Mars and Pluto. Depth, death-rebirth cycles, and hidden power. Used in workings of transformation, banishing, and the underworld.',
+  },
+  sagittarius: {
+    title: 'Sagittarius (Archer)',
+    body: 'Mutable fire sign ruled by Jupiter. The arrow of aspiration -- expansion, questing, and higher truth. In sigil work it directs intent toward distant aims.',
+  },
+  capricorn: {
+    title: 'Capricorn (Sea-Goat)',
+    body: 'Cardinal earth sign ruled by Saturn. Discipline, ascent, and mastery over time. Used in workings of binding, ambition, and enduring structures.',
+  },
+  aquarius: {
+    title: 'Aquarius (Water-Bearer)',
+    body: 'Fixed air sign ruled by Saturn and Uranus. Pouring forth of new currents -- innovation, collective mind, and cosmic waters. Marks circles of revelation.',
+  },
+  pisces: {
+    title: 'Pisces (Fishes)',
+    body: 'Mutable water sign ruled by Jupiter and Neptune. Dissolution, dreams, and the boundless deep. Used in workings of vision, empathy, and the unseen.',
+  },
+  venus: {
+    title: 'Venus',
+    body: 'The planetary glyph of Venus: circle over cross, spirit above matter. Rules love, beauty, harmony, and attraction. Associated with copper in alchemy.',
+  },
+  mars: {
+    title: 'Mars',
+    body: 'The planetary glyph of Mars: circle with a driving arrow. Rules force, conflict, courage, and directed will. Associated with iron in alchemy.',
+  },
+  jupiter: {
+    title: 'Jupiter',
+    body: 'The planetary glyph of Jupiter: the crescent of soul rising over the cross of matter. Rules expansion, fortune, and sovereign generosity. Associated with tin.',
+  },
+  saturn: {
+    title: 'Saturn',
+    body: 'The planetary glyph of Saturn: the cross of matter over the crescent of soul. Rules time, limits, karma, and structure. Associated with lead -- the prima materia of the Work.',
+  },
+  uranus: {
+    title: 'Uranus',
+    body: 'The modern planetary glyph of Uranus. Rules sudden change, invention, and the lightning-flash of liberation. Used in workings that break old patterns.',
+  },
+  neptune: {
+    title: 'Neptune',
+    body: 'The planetary glyph of Neptune: the trident of the sea. Rules dreams, illusion, mysticism, and the dissolving tide. Marks circles of vision and trance.',
+  },
+  pluto: {
+    title: 'Pluto',
+    body: 'The planetary glyph of Pluto: the circle of spirit held in the cup of soul. Rules death-and-rebirth, hidden wealth, and power drawn from below.',
+  },
+  fehu: {
+    title: 'Fehu (Wealth)',
+    body: 'First rune of the Elder Futhark. Cattle, wealth, and mobile power. In sigil work it draws abundance and sets energy into circulation.',
+  },
+  uruz: {
+    title: 'Uruz (Aurochs)',
+    body: 'The wild ox: untamed strength, vitality, and primal health. Used in workings of fortitude, healing, and raw life-force.',
+  },
+  thurisaz: {
+    title: 'Thurisaz (Thorn)',
+    body: 'The thorn or giant: reactive force, defense, and directed conflict. A warding rune that answers force with force.',
+  },
+  ansuz: {
+    title: 'Ansuz (God / Breath)',
+    body: 'The breath of Odin: speech, inspiration, and divine message. Marks sigils of communication, wisdom, and invoked presence.',
+  },
+  raidho: {
+    title: 'Raidho (Ride)',
+    body: 'The wheel of the journey: movement, rhythm, and right ordering of action. Used to set workings in motion along their proper path.',
+  },
+  kenaz: {
+    title: 'Kenaz (Torch)',
+    body: 'The torch in darkness: knowledge, revelation, and controlled fire. Used in workings of craft, study, and illumination.',
+  },
+  gebo: {
+    title: 'Gebo (Gift)',
+    body: 'The crossed mark of exchange: gifts, oaths, and sacred reciprocity. Binds two parties in balanced giving.',
+  },
+  hagalaz: {
+    title: 'Hagalaz (Hail)',
+    body: 'The hailstone: disruption that purifies, forces beyond control. Used to shatter stagnation -- or respected as the storm that precedes renewal.',
+  },
+  isa: {
+    title: 'Isa (Ice)',
+    body: 'The single frozen line: stillness, stasis, and concentrated will. Freezes hostile motion and preserves what must not change.',
+  },
+  algiz: {
+    title: 'Algiz (Elk / Sedge)',
+    body: 'The raised hand or elk: protection, instinct, and higher connection. One of the strongest warding runes in the Futhark.',
+  },
+  sowilo: {
+    title: 'Sowilo (Sun)',
+    body: 'The sun-wheel\'s lightning: victory, guidance, and invincible energy. A rune of success that drives workings to completion.',
+  },
+  tiwaz: {
+    title: 'Tiwaz (Arrow of Tyr)',
+    body: 'The sky-father\'s arrow: justice, sacrifice, and honorable victory. Points intent upward and binds oaths to their fulfillment.',
+  },
 };
 
 // ── Placement Modes ────────────────────────────────────────
@@ -115,6 +239,7 @@ export const PLACEMENT_TOOLTIPS: Record<string, string> = {
   vertices: 'Clones the glyph onto every corner of the active polygon layer. If multiple polygons exist, select which one to target, or leave on Auto for the first polygon.',
   intersections: 'Clones the glyph onto the exact coordinates where the radial axis lines cross the outermost ring. Choose an axis layer to target, or leave on Auto.',
   size: 'The rendered size of each stamped glyph in pixels. Larger glyphs are more prominent; smaller ones work well when many are stamped at vertices or intersections.',
+  rotation: 'Rotates the glyph around its own center, in degrees. Useful for aligning directional symbols like Mars\' arrow or the runes with your composition.',
   targetLayer: 'Specifies which polygon or axis layer the placement targets. Leave on Auto to use the first matching layer in the stack.',
   glyphSelect: 'Choose a symbol from the hardcoded glyph library. Each glyph carries its own alchemical or astrological meaning -- hover the name in the Grimoire panel to learn more.',
 };

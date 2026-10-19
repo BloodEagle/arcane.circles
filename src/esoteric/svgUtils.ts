@@ -179,6 +179,7 @@ export interface RenderOptions {
   bgColor?: string;
   glyphColor?: string;
   autoContrast?: boolean;
+  globalRotation?: number;
 }
 
 export function renderGlyphPlacement(
@@ -189,11 +190,11 @@ export function renderGlyphPlacement(
   const glyph = GLYPHS[placement.glyphId];
   if (!glyph) return '';
   const coords = computePlacementCoords(placement, layers);
+  const rot = placement.rotation ?? 0;
   let out = '';
   for (const c of coords) {
-    const half = placement.size / 2;
     const scale = placement.size / 50;
-    out += `\n  <g transform="translate(${(c.x - half).toFixed(2)},${(c.y - half).toFixed(2)}) scale(${scale.toFixed(3)})" color="${glyphColor}">${glyph.render(50)}</g>`;
+    out += `\n  <g transform="translate(${c.x.toFixed(2)},${c.y.toFixed(2)}) rotate(${rot.toFixed(1)}) scale(${scale.toFixed(3)}) translate(-25,-25)" color="${glyphColor}">${glyph.render(50)}</g>`;
   }
   return out.trim();
 }
@@ -214,7 +215,12 @@ export function buildSvgInner(layers: AnyLayer[], placements: GlyphPlacement[], 
   for (const [, def] of filterDefs) {
     defs += '\n  ' + def;
   }
-  return defs + body;
+  const inner = defs + body;
+  const rot = opts.globalRotation ?? 0;
+  if (rot !== 0) {
+    return `\n  <g transform="rotate(${rot.toFixed(2)} ${CENTER} ${CENTER})">${inner}\n  </g>`;
+  }
+  return inner;
 }
 
 export function buildExportSvg(layers: AnyLayer[], placements: GlyphPlacement[], opts: RenderOptions = {}): string {

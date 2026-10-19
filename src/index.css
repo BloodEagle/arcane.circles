@@ -112,6 +112,15 @@
     height: 100vh;
     height: 100dvh;
   }
+  @keyframes sigil-spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  .sigil-animating {
+    animation: sigil-spin 90s linear infinite;
+    transform-origin: center;
+  }
   .custom-scroll {
     -webkit-overflow-scrolling: touch;
     overscroll-behavior: contain;
