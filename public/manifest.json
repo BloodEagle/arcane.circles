@@ -1,6 +1,6 @@
 {
-  "name": "Arcane.io",
-  "short_name": "Arcane.io",
+  "name": "arcane.circles",
+  "short_name": "arcane.circles",
   "description": "Procedural sigil and esoteric circle design tool with vector export.",
   "start_url": "./",
   "scope": "./",

@@ -1,4 +1,4 @@
-# Arcane.io
+# arcane.circles
 
 A procedural sigil and esoteric circle design tool. Build alchemical circles, sacred geometry, and astrological charts in real time, then export as SVG or PNG.
 

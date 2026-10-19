@@ -94,7 +94,7 @@ export default function App() {
           </div>
           <div>
             <h1 className="text-sm font-semibold tracking-wide" style={{ color: 'var(--c-text)' }}>
-              Arcane.io
+              arcane.circles
             </h1>
             <p className="text-[10px] tracking-wider uppercase" style={{ color: 'var(--c-text-dim)' }}>
               Procedural Sigil & Circle Engine · Vector Output
@@ -233,36 +233,33 @@ export default function App() {
               <SigilCanvas layers={layers} placements={placements} renderOptions={renderOptions} />
             </main>
             {sidebarOpen && (
-              <>
-                <div
-                  className="fixed inset-0 z-40 bg-black/50"
-                  onClick={() => setSidebarOpen(false)}
-                />
-                <div
-                  className="mobile-sheet fixed bottom-0 left-0 right-0 z-50 rounded-t-2xl flex flex-col"
-                  style={{
-                    background: 'var(--c-panel)',
-                    borderTop: '1px solid var(--c-border)',
-                    paddingBottom: 'env(safe-area-inset-bottom)',
-                  }}
-                >
-                  <div className="w-12 h-1 bg-gray-600 rounded-full mx-auto mt-3 mb-2 shrink-0" />
-                  <div className="flex-1 min-h-0 overflow-y-auto custom-scroll">
-                    <Sidebar
-                      layers={layers}
-                      placements={placements}
-                      onLayersChange={setLayers}
-                      onPlacementsChange={setPlacements}
-                      onExportSvg={handleExportSvg}
-                      onExportPng={handleExportPng}
-                      onApplyPreset={applyPresetById}
-                      onClose={() => setSidebarOpen(false)}
-                      isMobile={true}
-                    />
-                  </div>
-                </div>
-              </>
+              <div
+                className="fixed inset-0 z-40 transition-opacity"
+                style={{ background: 'rgba(0,0,0,0.5)' }}
+                onClick={() => setSidebarOpen(false)}
+              />
             )}
+            <div
+              className="fixed top-0 right-0 h-full w-[420px] max-w-[90vw] z-50 flex flex-col transition-transform duration-300 ease-out"
+              style={{
+                background: 'var(--c-panel)',
+                borderLeft: '1px solid var(--c-border)',
+                transform: sidebarOpen ? 'translateX(0)' : 'translateX(100%)',
+                paddingBottom: 'env(safe-area-inset-bottom)',
+              }}
+            >
+              <Sidebar
+                layers={layers}
+                placements={placements}
+                onLayersChange={setLayers}
+                onPlacementsChange={setPlacements}
+                onExportSvg={handleExportSvg}
+                onExportPng={handleExportPng}
+                onApplyPreset={applyPresetById}
+                onClose={() => setSidebarOpen(false)}
+                isMobile={true}
+              />
+            </div>
           </>
         ) : (
           <>

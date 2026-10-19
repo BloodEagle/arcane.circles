@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to Arcane.io are documented here.
+All notable changes to arcane.circles are documented here.
 
 ## [1.0.0] - 2026-10-15
 
