@@ -3,6 +3,7 @@ import { ARCHETYPES, clonePreset } from '@/esoteric/archetypes';
 import { downloadSvg, downloadPng, type RenderOptions } from '@/esoteric/svgUtils';
 import { THEMES, applyTheme, DEFAULT_THEME_ID } from '@/esoteric/theme';
 import { generateSigil } from '@/esoteric/randomize';
+import { conjureSigil } from '@/esoteric/conjure';
 import { readDesignFromHash, buildShareUrl } from '@/esoteric/share';
 import { deriveThemeColors, useCustomThemes } from '@/hooks/useCustomThemes';
 import Sidebar from '@/components/Sidebar';
@@ -11,7 +12,7 @@ import GrimoirePanel from '@/components/GrimoirePanel';
 import Onboarding from '@/components/Onboarding';
 import {
   Circle, BookOpen, Palette, Download, X, Menu, Undo2, Redo2,
-  Wand2, Play, Pause, Share2, Coffee, Info, Trash2,
+  Wand2, Play, Pause, Share2, Coffee, Info, Trash2, Sparkles,
 } from 'lucide-react';
 import { usePwaInstall } from '@/hooks/usePwaInstall';
 import { useDesignStorage } from '@/hooks/useDesignStorage';
@@ -39,6 +40,8 @@ export default function App() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [autoContrast, setAutoContrast] = useState(true);
   const [animating, setAnimating] = useState(false);
+  const [conjureOpen, setConjureOpen] = useState(false);
+  const [conjureText, setConjureText] = useState('');
   const [globalRotation, setGlobalRotation] = useState(0);
   const [shareCopied, setShareCopied] = useState(false);
   const [onboardingOpen, setOnboardingOpen] = useState(() => {
@@ -131,6 +134,14 @@ export default function App() {
     setDoc(d => ({ ...d, layers: l, placements: p }));
   }, [setDoc]);
 
+  const conjure = useCallback(() => {
+    if (!conjureText.trim()) return;
+    const { layers: l, placements: p } = conjureSigil(conjureText);
+    setDoc(d => ({ ...d, layers: l, placements: p }));
+    setConjureOpen(false);
+    setConjureText('');
+  }, [conjureText, setDoc]);
+
   const shareDesign = useCallback(async () => {
     const url = buildShareUrl({ layers, placements, themeId });
     window.history.replaceState(null, '', url);
@@ -168,63 +179,92 @@ export default function App() {
       className="app-shell flex flex-col overflow-hidden"
       style={{ background: 'var(--c-bg)', color: 'var(--c-text)' }}
     >
-      <header
-        className="flex items-center gap-3 px-5 py-3 shrink-0"
-        style={{ borderBottom: '1px solid var(--c-border)', background: 'var(--c-panel)' }}
-      >
-        <div className="flex items-center gap-2.5 min-w-0">
-          <div
-            className="w-8 h-8 rounded-full flex items-center justify-center shrink-0"
-            style={{
-              border: `2px solid var(--c-accent)`,
-              background: 'color-mix(in srgb, var(--c-accent) 12%, transparent)',
-            }}
-          >
-            <Circle size={16} style={{ color: 'var(--c-accent)' }} />
+      <header className="shrink-0" style={{ borderBottom: '1px solid var(--c-border)', background: 'var(--c-panel)' }}>
+        <div className="flex items-center gap-3 px-5 py-3">
+          <div className="flex items-center gap-2.5 min-w-0">
+            <div
+              className="w-8 h-8 rounded-full flex items-center justify-center shrink-0"
+              style={{
+                border: `2px solid var(--c-accent)`,
+                background: 'color-mix(in srgb, var(--c-accent) 12%, transparent)',
+              }}
+            >
+              <Circle size={16} style={{ color: 'var(--c-accent)' }} />
+            </div>
+            <div className="min-w-0 shrink-0">
+              <h1 className="text-sm font-semibold tracking-wide" style={{ color: 'var(--c-text)' }}>
+                arcane.circles
+              </h1>
+              <p className="text-[10px] tracking-wider uppercase hidden sm:block" style={{ color: 'var(--c-text-dim)' }}>
+                Procedural Sigil & Circle Engine · Vector Output
+              </p>
+            </div>
           </div>
-          <div className="min-w-0 shrink-0">
-            <h1 className="text-sm font-semibold tracking-wide" style={{ color: 'var(--c-text)' }}>
-              arcane.circles
-            </h1>
-            <p className="text-[10px] tracking-wider uppercase hidden sm:block" style={{ color: 'var(--c-text-dim)' }}>
-              Procedural Sigil & Circle Engine · Vector Output
-            </p>
+          <div className="ml-auto hidden md:flex items-center gap-3 text-[11px] font-mono" style={{ color: 'var(--c-text-dim)' }}>
+            <span>{layers.length} layers</span>
+            <span>·</span>
+            <span>{placements.length} glyphs</span>
           </div>
-        </div>
-
-        <div className="ml-auto flex items-center gap-1.5 sm:gap-2">
           {isMobile && (
             <button
               onClick={() => setSidebarOpen(true)}
-              className={headerBtn}
+              className={`${headerBtn} ml-auto`}
               style={headerBtnStyle}
               title="Open editor"
             >
               <Menu size={15} />
             </button>
           )}
-          <div className="hidden md:flex items-center gap-3 text-[11px] font-mono mr-2" style={{ color: 'var(--c-text-dim)' }}>
-            <span>{layers.length} layers</span>
-            <span>·</span>
-            <span>{placements.length} glyphs</span>
-          </div>
+        </div>
 
+        <div className="flex items-center gap-1 px-3 py-1.5 overflow-x-auto custom-scroll" style={{ borderTop: '1px solid var(--c-border)' }}>
           <button onClick={undo} disabled={!canUndo} className={`${headerBtn} disabled:opacity-30`} style={headerBtnStyle} title="Undo (Ctrl+Z)">
             <Undo2 size={15} />
           </button>
-          <button onClick={redo} disabled={!canRedo} className={`${headerBtn} disabled:opacity-30 hidden sm:flex`} style={headerBtnStyle} title="Redo (Ctrl+Shift+Z)">
+          <button onClick={redo} disabled={!canRedo} className={`${headerBtn} disabled:opacity-30`} style={headerBtnStyle} title="Redo (Ctrl+Shift+Z)">
             <Redo2 size={15} />
           </button>
+          <div className="w-px h-5 shrink-0" style={{ background: 'var(--c-border)' }} />
           <button onClick={invoke} className={headerBtn} style={{ ...headerBtnStyle, color: 'var(--c-accent)', borderColor: 'var(--c-accent-border)' }} title="Invoke — generate a random sigil">
             <Wand2 size={15} />
           </button>
-          <button onClick={() => setAnimating(v => !v)} className={`${headerBtn} hidden sm:flex`} style={headerBtnStyle} title={animating ? 'Pause animation' : 'Animate sigil'}>
+          <div className="relative">
+            <button onClick={() => setConjureOpen(v => !v)} className={headerBtn} style={{ ...headerBtnStyle, color: 'var(--c-accent)', borderColor: 'var(--c-accent-border)' }} title="Conjure — describe your intent">
+              <Sparkles size={15} />
+              <span className="hidden sm:inline text-[11px] font-medium">Conjure</span>
+            </button>
+            {conjureOpen && (
+              <>
+                <div className="fixed inset-0 z-10" onClick={() => setConjureOpen(false)} />
+                <div
+                  className="absolute left-0 top-full mt-1 z-20 rounded-lg p-3 shadow-xl w-[280px]"
+                  style={{ background: 'var(--c-panel)', border: '1px solid var(--c-border-hover)' }}
+                >
+                  <p className="text-[11px] mb-2 leading-relaxed" style={{ color: 'var(--c-text-muted)' }}>
+                    Describe your intent — the circle reads the old tongue: <em>protection, moon, fire, wealth, binding...</em>
+                  </p>
+                  <input
+                    type="text"
+                    value={conjureText}
+                    onChange={e => setConjureText(e.target.value)}
+                    onKeyDown={e => { if (e.key === 'Enter') conjure(); }}
+                    placeholder="a ward of protection under the moon"
+                    className="input-sm mb-2"
+                    autoFocus
+                  />
+                  <button onClick={conjure} className="btn-primary w-full">Conjure</button>
+                </div>
+              </>
+            )}
+          </div>
+          <button onClick={() => setAnimating(v => !v)} className={headerBtn} style={headerBtnStyle} title={animating ? 'Pause animation' : 'Animate sigil'}>
             {animating ? <Pause size={15} /> : <Play size={15} />}
           </button>
           <button onClick={shareDesign} className={headerBtn} style={shareCopied ? { ...headerBtnStyle, color: 'var(--c-success)', borderColor: 'var(--c-success)' } : headerBtnStyle} title="Copy share link">
             <Share2 size={15} />
-            {shareCopied && <span className="hidden lg:inline text-[11px] font-medium">Copied</span>}
+            {shareCopied && <span className="text-[11px] font-medium">Copied</span>}
           </button>
+          <div className="w-px h-5 shrink-0" style={{ background: 'var(--c-border)' }} />
 
           {!isInstalled && (canInstall || isIOS) && (
             <div className="relative">

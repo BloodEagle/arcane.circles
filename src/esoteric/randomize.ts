@@ -1,16 +1,7 @@
 import type { AnyLayer, GlyphPlacement, GlyphId } from './types';
 import { genId } from './archetypes';
 import { GLYPH_LIST } from './glyphs';
-
-function hslToHex(h: number, s: number, l: number): string {
-  const a = s * Math.min(l, 1 - l);
-  const f = (n: number) => {
-    const k = (n + h / 30) % 12;
-    const c = l - a * Math.max(-1, Math.min(k - 3, Math.min(9 - k, 1)));
-    return Math.round(255 * c).toString(16).padStart(2, '0');
-  };
-  return `#${f(0)}${f(8)}${f(4)}`;
-}
+import { hslToHex } from './colorUtils';
 
 function pick<T>(arr: readonly T[]): T {
   return arr[Math.floor(Math.random() * arr.length)];
